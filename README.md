@@ -12,6 +12,8 @@ thing! https://github.com/PolymerLabs/tedium/issues
 
 -->
 
+[![Build status](https://travis-ci.org/PolymerElements/iron-scroll-target-behavior.svg?branch=master)](https://travis-ci.org/PolymerElements/iron-scroll-target-behavior)
+
 _[Demo and API docs](https://elements.polymer-project.org/elements/iron-scroll-target-behavior)_
 
 
