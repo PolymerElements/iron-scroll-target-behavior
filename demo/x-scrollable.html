@@ -85,6 +85,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       Polymer.IronScrollTargetBehavior
     ],
 
+    attached: function() {
+      this._scrollHandler();
+    },
+
     _scrollHandler: function() {
       this._setXScrollTop(this._scrollTop);
       this._setXScrollLeft(this._scrollLeft);
