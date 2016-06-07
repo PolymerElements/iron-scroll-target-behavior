@@ -41,7 +41,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        *  </x-element>
        * </div>
        *```
-       * In this case, the `scrollTarget` will point to the outer div element. 
+       * In this case, the `scrollTarget` will point to the outer div element.
        *
        * ### Document scrolling
        *
@@ -58,7 +58,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        *```js
        * appHeader.scrollTarget = document.querySelector('#scrollable-element');
        *```
-       * 
+       *
        * @type {HTMLElement}
        */
       scrollTarget: {
@@ -138,7 +138,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      */
     get _scrollTop() {
       if (this._isValidScrollTarget()) {
-        return this.scrollTarget === this._doc ? window.pageYOffset : this.scrollTarget.scrollTop;
+        requestAnimationFrame(function() {
+          return this.scrollTarget === this._doc ? window.pageYOffset : this.scrollTarget.scrollTop;
+        });
       }
       return 0;
     },
@@ -150,7 +152,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      */
     get _scrollLeft() {
       if (this._isValidScrollTarget()) {
-        return this.scrollTarget === this._doc ? window.pageXOffset : this.scrollTarget.scrollLeft;
+        requestAnimationFrame(function() {
+          return this.scrollTarget === this._doc ? window.pageXOffset : this.scrollTarget.scrollLeft;
+        });
       }
       return 0;
     },
@@ -204,7 +208,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      */
     get _scrollTargetWidth() {
       if (this._isValidScrollTarget()) {
-        return this.scrollTarget === this._doc ? window.innerWidth : this.scrollTarget.offsetWidth;
+        reaquestAnimationFrame(function() {
+          return this.scrollTarget === this._doc ? window.innerWidth : this.scrollTarget.offsetWidth;
+        });
       }
       return 0;
     },
@@ -216,7 +222,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      */
     get _scrollTargetHeight() {
       if (this._isValidScrollTarget()) {
-        return this.scrollTarget === this._doc ? window.innerHeight : this.scrollTarget.offsetHeight;
+        reaquestAnimationFrame(function() {
+          return this.scrollTarget === this._doc ? window.innerHeight : this.scrollTarget.offsetHeight;
+        });
       }
       return 0;
     },
