@@ -94,6 +94,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           done();
         });
       });
+
+      test('_enableScrollListener', function(done) {
+        flush(function() {
+          xScroll._scrollHandler = sinon.spy();
+          xScroll.scrollTarget = 'temporaryScrollingRegion';
+          xScroll.scroll(0, 100);
+          xScroll._enableScrollListener(true, xScroll.scrollTarget);
+          setTimeout(function() {
+            assert.isTrue(xScroll._scrollHandler.called, '_scrollHandler should be called');
+            xScroll._scrollHandler.reset();
+            xScroll._enableScrollListener(false, xScroll.scrollTarget);
+            xScroll.scroll(0, 200);
+            setTimeout(function() {
+              assert.isFalse(xScroll._scrollHandler.called, '_scrollHandler should not be called');
+              done();
+            }, 100);
+          }, 100);
+        });
+      });
     });
 
     suite('scrolling region', function() {
