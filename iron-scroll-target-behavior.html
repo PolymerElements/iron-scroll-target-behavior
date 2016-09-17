@@ -79,15 +79,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     _shouldHaveListener: true,
 
     _scrollTargetChanged: function(scrollTarget, isAttached) {
-      var eventTarget, hasListener = this._shouldHaveListener;
+      var eventTarget;
 
       if (this._oldScrollTarget) {
-        this._enableScrollListener(false, this._oldScrollTarget);
+        this._toggleScrollListener(false, this._oldScrollTarget);
         this._oldScrollTarget = null;
       }
-
-      this._shouldHaveListener = hasListener;
-
       if (!isAttached) {
         return;
       }
@@ -105,7 +102,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         this._boundScrollHandler = this._boundScrollHandler || this._scrollHandler.bind(this);
         this._oldScrollTarget = scrollTarget;
-        this._enableScrollListener(hasListener, scrollTarget);
+        this._toggleScrollListener(this._shouldHaveListener, scrollTarget);
 
       }
     },
@@ -235,13 +232,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       return this.scrollTarget instanceof HTMLElement;
     },
 
-    /**
-     * Enables or disables the scroll event listener
-     *
-     * @param {boolean} yes True to add the event, False to remove it
-     * @param {HTMLElement} scrollTarget The scroll target
-     */
-    _enableScrollListener: function(yes, scrollTarget) {
+    _toggleScrollListener: function(yes, scrollTarget) {
       if (!this._boundScrollHandler) {
         return;
       }
@@ -252,7 +243,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       } else {
         eventTarget.removeEventListener('scroll', this._boundScrollHandler);
       }
+    },
+
+    /**
+     * Enables or disables the scroll event listener.
+     *
+     * @param {boolean} yes True to add the event, False to remove it.
+     */
+    toggleScrollListener: function(yes) {
       this._shouldHaveListener = yes;
+      this._toggleScrollListener(yes, this.scrollTarget);
     }
 
   };
