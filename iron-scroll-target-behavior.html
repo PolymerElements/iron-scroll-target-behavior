@@ -73,12 +73,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       '_scrollTargetChanged(scrollTarget, isAttached)'
     ],
 
+    /**
+     * True if the event listener should be installed.
+     */
+    _shouldHaveListener: true,
+
     _scrollTargetChanged: function(scrollTarget, isAttached) {
-      var eventTarget;
+      var eventTarget, hasListener = this._shouldHaveListener;
 
       if (this._oldScrollTarget) {
-        eventTarget = this._oldScrollTarget === this._doc ? window : this._oldScrollTarget;
-        eventTarget.removeEventListener('scroll', this._boundScrollHandler);
+        this._enableScrollListener(false, this._oldScrollTarget);
         this._oldScrollTarget = null;
       }
 
@@ -97,11 +101,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       } else if (this._isValidScrollTarget()) {
 
-        eventTarget = scrollTarget === this._doc ? window : scrollTarget;
         this._boundScrollHandler = this._boundScrollHandler || this._scrollHandler.bind(this);
         this._oldScrollTarget = scrollTarget;
+        this._enableScrollListener(hasListener, scrollTarget);
 
-        eventTarget.addEventListener('scroll', this._boundScrollHandler);
       }
     },
 
@@ -228,7 +231,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      */
     _isValidScrollTarget: function() {
       return this.scrollTarget instanceof HTMLElement;
+    },
+
+    /**
+     * Enables or disables the scroll event listener
+     *
+     * @param {boolean} yes True to add the event, False to remove it
+     * @param {HTMLElement} scrollTarget The scroll target
+     */
+    _enableScrollListener: function(yes, scrollTarget) {
+      if (!this._boundScrollHandler) {
+        return;
+      }
+      var eventTarget = scrollTarget === this._doc ? window : scrollTarget;
+
+      if (yes) {
+        eventTarget.addEventListener('scroll', this._boundScrollHandler);
+      } else {
+        eventTarget.removeEventListener('scroll', this._boundScrollHandler);
+      }
+      this._shouldHaveListener = yes;
     }
+
   };
 
 </script>
