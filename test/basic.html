@@ -95,16 +95,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
       });
 
-      test('_enableScrollListener', function(done) {
+      test('toggleScrollListener', function(done) {
         flush(function() {
           xScroll._scrollHandler = sinon.spy();
           xScroll.scrollTarget = 'temporaryScrollingRegion';
           xScroll.scroll(0, 100);
-          xScroll._enableScrollListener(true, xScroll.scrollTarget);
+          xScroll.toggleScrollListener(true);
           setTimeout(function() {
             assert.isTrue(xScroll._scrollHandler.called, '_scrollHandler should be called');
             xScroll._scrollHandler.reset();
-            xScroll._enableScrollListener(false, xScroll.scrollTarget);
+            xScroll.toggleScrollListener(false);
             xScroll.scroll(0, 200);
             setTimeout(function() {
               assert.isFalse(xScroll._scrollHandler.called, '_scrollHandler should not be called');
