@@ -27,9 +27,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <template is="dom-repeat" items="[[_getItems(itemCount)]]">
-      <div class="item">[[index]]</div>
-    </template>
+    <dom-repeat items="[[_getItems(itemCount)]]">
+      <template>
+        <div class="item">[[index]]</div>
+      </template>
+    </dom-repeat>
   </template>
 
 </dom-module>

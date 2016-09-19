@@ -95,12 +95,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       } else if (typeof scrollTarget === 'string') {
 
-        this.scrollTarget = this.domHost ? this.domHost.$[scrollTarget] :
+        // TODO(blasten) use this.domHost when Polymer/issues/3963 is fixed.
+        var root =  Polymer.Utils.getRootNode(this);
+        var domHost = (root instanceof DocumentFragment) ? root.host : root;
+
+        this.scrollTarget = domHost && domHost.$ ? domHost.$[scrollTarget] :
             Polymer.dom(this.ownerDocument).querySelector('#' + scrollTarget);
 
       } else if (this._isValidScrollTarget()) {
 
-        this._boundScrollHandler = this._boundScrollHandler || this._scrollHandler.bind(this);
         this._oldScrollTarget = scrollTarget;
         this._toggleScrollListener(this._shouldHaveListener, scrollTarget);
 
@@ -229,19 +232,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * @return {boolean}
      */
     _isValidScrollTarget: function() {
-      return this.scrollTarget instanceof HTMLElement;
+      // TODO(blasten): use the instanceof operator once
+      // webcomponentsjs/issues/623 is fixed.
+      return this.scrollTarget && this.scrollTarget.nodeType === 1;
     },
 
     _toggleScrollListener: function(yes, scrollTarget) {
-      if (!this._boundScrollHandler) {
-        return;
-      }
       var eventTarget = scrollTarget === this._doc ? window : scrollTarget;
-
       if (yes) {
-        eventTarget.addEventListener('scroll', this._boundScrollHandler);
+        if (!this._boundScrollHandler) {
+          this._boundScrollHandler = this._scrollHandler.bind(this);
+          eventTarget.addEventListener('scroll', this._boundScrollHandler);
+        }
       } else {
-        eventTarget.removeEventListener('scroll', this._boundScrollHandler);
+        if (this._boundScrollHandler) {
+          eventTarget.removeEventListener('scroll', this._boundScrollHandler);
+          this._boundScrollHandler = null;
+        }
       }
     },
 
