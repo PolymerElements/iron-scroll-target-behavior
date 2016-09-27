@@ -74,17 +74,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     ],
 
     /**
-     * True if the event listener should be installed.
+     * True if the scroll handler should be called during scroll.
      */
-    _shouldHaveListener: true,
+    _scrollHandlerEnabled: true,
 
     _scrollTargetChanged: function(scrollTarget, isAttached) {
-      var eventTarget;
+      var eventTarget = this.__eventTarget;
 
-      if (this._oldScrollTarget) {
-        this._toggleScrollListener(false, this._oldScrollTarget);
-        this._oldScrollTarget = null;
+      if (eventTarget) {
+        this._toggleScrollListener(false, eventTarget);
+
+        if (eventTarget.__scrollListeners.length === 0) {
+          eventTarget.__scrollListeners = null;
+          eventTarget.removeEventListener('scroll', this.__scrollHandler);
+        }
+        this.__eventTarget = null;
       }
+
       if (!isAttached) {
         return;
       }
@@ -98,12 +104,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.scrollTarget = this.domHost ? this.domHost.$[scrollTarget] :
             Polymer.dom(this.ownerDocument).querySelector('#' + scrollTarget);
 
-      } else if (this._isValidScrollTarget()) {
+      } else if (scrollTarget instanceof HTMLElement) {
+        eventTarget = this._getEventTarget(scrollTarget);
+        this.__eventTarget = eventTarget;
 
-        this._boundScrollHandler = this._boundScrollHandler || this._scrollHandler.bind(this);
-        this._oldScrollTarget = scrollTarget;
-        this._toggleScrollListener(this._shouldHaveListener, scrollTarget);
+        if (eventTarget.__scrollListeners) {
+          eventTarget.__scrollListeners.push(this);
+        } else {
+          eventTarget.__scrollListeners = [this];
+          eventTarget.addEventListener('scroll', this.__scrollHandler);
+        }
+      }
+    },
 
+    __scrollHandler: function() {
+      // Clear cache.
+      this.__scrollTop = null;
+      this.__scrollLeft = null;
+      var i, listeners = this.__scrollListeners;
+      for (i = 0; i < listeners.length; i++) {
+        if (listeners[i]._scrollHandlerEnabled) {
+          listeners[i]._scrollHandler();
+        }
       }
     },
 
@@ -139,10 +161,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * @type {number}
      */
     get _scrollTop() {
-      if (this._isValidScrollTarget()) {
-        return this.scrollTarget === this._doc ? window.pageYOffset : this.scrollTarget.scrollTop;
+      var target = this.__eventTarget;
+      if (!target) {
+        return 0;
       }
-      return 0;
+      if (target.__scrollTop == null) {
+        target.__scrollTop = target === window ? window.pageYOffset : target.scrollTop;
+      }
+      return target.__scrollTop;
     },
 
     /**
@@ -151,10 +177,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * @type {number}
      */
     get _scrollLeft() {
-      if (this._isValidScrollTarget()) {
-        return this.scrollTarget === this._doc ? window.pageXOffset : this.scrollTarget.scrollLeft;
+      var target = this.__eventTarget;
+      if (!target) {
+        return 0;
       }
-      return 0;
+      if (target.__scrollLeft == null) {
+        target.__scrollLeft = target === window ? window.pageXOffset : target.scrollLeft;
+      }
+      return target.__scrollLeft;
     },
 
     /**
@@ -163,10 +193,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * @type {number}
      */
     set _scrollTop(top) {
-      if (this.scrollTarget === this._doc) {
+      var target = this.__eventTarget;
+      if (!target) {
+        return;
+      }
+      target.__scrollTop = null;
+      if (target === window) {
         window.scrollTo(window.pageXOffset, top);
-      } else if (this._isValidScrollTarget()) {
-        this.scrollTarget.scrollTop = top;
+      } else {
+        target.scrollTop = top;
       }
     },
 
@@ -176,10 +211,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * @type {number}
      */
     set _scrollLeft(left) {
-      if (this.scrollTarget === this._doc) {
+      var target = this.__eventTarget;
+      if (!target) {
+        return;
+      }
+      target.__scrollLeft = null;
+      if (target === window) {
         window.scrollTo(left, window.pageYOffset);
-      } else if (this._isValidScrollTarget()) {
-        this.scrollTarget.scrollLeft = left;
+      } else {
+        target.scrollLeft = left;
       }
     },
 
@@ -191,11 +231,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * @param {number} top The top position
      */
     scroll: function(left, top) {
-       if (this.scrollTarget === this._doc) {
+      var target = this.__eventTarget;
+      if (!target) {
+        return;
+      }
+      target.__scrollTop = null;
+      target.__scrollLeft = null;
+      if (target === window) {
         window.scrollTo(left, top);
-      } else if (this._isValidScrollTarget()) {
-        this.scrollTarget.scrollLeft = left;
-        this.scrollTarget.scrollTop = top;
+      } else {
+        target.scrollLeft = left;
+        target.scrollTop = top;
       }
     },
 
@@ -205,8 +251,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * @type {number}
      */
     get _scrollTargetWidth() {
-      if (this._isValidScrollTarget()) {
-        return this.scrollTarget === this._doc ? window.innerWidth : this.scrollTarget.offsetWidth;
+      if (this.__eventTarget) {
+        return this.__eventTarget === window ? window.innerWidth : this.__eventTarget.offsetWidth;
       }
       return 0;
     },
@@ -217,31 +263,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * @type {number}
      */
     get _scrollTargetHeight() {
-      if (this._isValidScrollTarget()) {
-        return this.scrollTarget === this._doc ? window.innerHeight : this.scrollTarget.offsetHeight;
+      if (this.__eventTarget) {
+        return this.__eventTarget === window ? window.innerHeight : this.__eventTarget.offsetHeight;
       }
       return 0;
     },
 
-    /**
-     * Returns true if the scroll target is a valid HTMLElement.
-     *
-     * @return {boolean}
-     */
-    _isValidScrollTarget: function() {
-      return this.scrollTarget instanceof HTMLElement;
+    _getEventTarget: function(scrollTarget) {
+      return scrollTarget === this._doc ? window : scrollTarget;
     },
 
-    _toggleScrollListener: function(yes, scrollTarget) {
-      if (!this._boundScrollHandler) {
-        return;
-      }
-      var eventTarget = scrollTarget === this._doc ? window : scrollTarget;
+    _toggleScrollListener: function(yes, eventTarget) {
+      var sidx = eventTarget.__scrollListeners.indexOf(this);
 
-      if (yes) {
-        eventTarget.addEventListener('scroll', this._boundScrollHandler);
-      } else {
-        eventTarget.removeEventListener('scroll', this._boundScrollHandler);
+      if (yes && sidx == -1) {
+        eventTarget.__scrollListeners.push(this);
+      } else if (!yes && sidx >= 0) {
+        eventTarget.__scrollListeners.splice(sidx, 1);
       }
     },
 
@@ -251,8 +289,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * @param {boolean} yes True to add the event, False to remove it.
      */
     toggleScrollListener: function(yes) {
-      this._shouldHaveListener = yes;
-      this._toggleScrollListener(yes, this.scrollTarget);
+      this._scrollHandlerEnabled = yes;
+      this._toggleScrollListener(yes, this.__eventTarget);
     }
 
   };
