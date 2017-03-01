@@ -25,9 +25,8 @@
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#2.0-preview",
     "iron-test-helpers": "polymerelements/iron-test-helpers#2.0-preview",
-    "test-fixture": "PolymerElements/test-fixture#^2.0.0",
-    "web-component-tester": "v6.0.0-prerelease.5",
-    "webcomponentsjs": "v1"
+    "web-component-tester": "^6.0.0-prerelease.6",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0-rc.1"
   },
   "variants": {
     "1.x": {
@@ -37,15 +36,9 @@
       "devDependencies": {
         "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
         "iron-test-helpers": "polymerelements/iron-test-helpers#^1.0.0",
-        "test-fixture": "PolymerElements/test-fixture#^1.0.0 ",
         "web-component-tester": "^4.0.0",
         "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
       }
     }
-  },
-  "resolutions": {
-    "polymer": "2.0-preview",
-    "test-fixture": "^2.0.0",
-    "webcomponentsjs": "v1"
   }
 }
