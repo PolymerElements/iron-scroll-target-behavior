@@ -97,12 +97,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         var domHost = this.domHost;
 
-        if (Polymer.Utils) {
-          // TODO(blasten) use this.domHost when Polymer/issues/3963 is fixed.
-          var root =  Polymer.Utils.getRootNode(this);
-          domHost = (root instanceof DocumentFragment) ? root.host : root;
-        }
-
         this.scrollTarget = domHost && domHost.$ ? domHost.$[scrollTarget] :
             Polymer.dom(this.ownerDocument).querySelector('#' + scrollTarget);
 
