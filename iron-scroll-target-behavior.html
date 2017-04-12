@@ -230,9 +230,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * @return {boolean}
      */
     _isValidScrollTarget: function() {
-      // TODO(blasten): use the instanceof operator once
-      // webcomponentsjs/issues/623 is fixed.
-      return this.scrollTarget && this.scrollTarget.nodeType === 1;
+      return this.scrollTarget instanceof HTMLElement;
     },
 
     _toggleScrollListener: function(yes, scrollTarget) {
