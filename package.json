@@ -1,0 +1,10 @@
+{
+  "name": "@polymer/iron-scroll-target-behavior",
+  "private": true,
+  "description": "Allows to define a scroller target",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/PolymerElements/iron-scroll-target-behavior.git"
+  },
+  "license": "http://polymer.github.io/LICENSE.txt"
+}
