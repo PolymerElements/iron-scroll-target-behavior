@@ -57,35 +57,46 @@ declare namespace Polymer {
 
     /**
      * True if the event listener should be installed.
+     *      
      */
     _shouldHaveListener: boolean;
-    _scrollTargetChanged(scrollTarget: any, isAttached: any): any;
-
-    /**
-     * Runs on every scroll event. Consumer of this behavior may override this method.
-     */
-    _scrollHandler(): any;
 
     /**
      * The default scroll target. Consumers of this behavior may want to customize
      * the default scroll target.
      */
-    _defaultScrollTarget(): any;
+    readonly _defaultScrollTarget: any;
 
     /**
      * Shortcut for the document element
      */
-    _doc(): any;
+    readonly _doc: any;
 
     /**
-     * Sets the number of pixels that the content of an element is scrolled upward.
+     * Gets the number of pixels that the content of an element is scrolled upward.
      */
-    _scrollTop(top: any): any;
+    _scrollTop: any;
 
     /**
-     * Sets the number of pixels that the content of an element is scrolled to the left.
+     * Gets the number of pixels that the content of an element is scrolled to the left.
      */
-    _scrollLeft(left: any): any;
+    _scrollLeft: any;
+
+    /**
+     * Gets the width of the scroll target.
+     */
+    readonly _scrollTargetWidth: any;
+
+    /**
+     * Gets the height of the scroll target.
+     */
+    readonly _scrollTargetHeight: any;
+    _scrollTargetChanged(scrollTarget: any, isAttached: any): void;
+
+    /**
+     * Runs on every scroll event. Consumer of this behavior may override this method.
+     */
+    _scrollHandler(): void;
 
     /**
      * Scrolls the content to a particular place.
@@ -93,30 +104,20 @@ declare namespace Polymer {
      * @param left The left position
      * @param top The top position
      */
-    scroll(left: number, top: number): any;
-
-    /**
-     * Gets the width of the scroll target.
-     */
-    _scrollTargetWidth(): any;
-
-    /**
-     * Gets the height of the scroll target.
-     */
-    _scrollTargetHeight(): any;
+    scroll(left: number, top: number): void;
 
     /**
      * Returns true if the scroll target is a valid HTMLElement.
      */
     _isValidScrollTarget(): boolean;
-    _toggleScrollListener(yes: any, scrollTarget: any): any;
+    _toggleScrollListener(yes: any, scrollTarget: any): void;
 
     /**
      * Enables or disables the scroll event listener.
      *
      * @param yes True to add the event, False to remove it.
      */
-    toggleScrollListener(yes: boolean): any;
+    toggleScrollListener(yes: boolean): void;
   }
 
   const IronScrollTargetBehavior: object;
