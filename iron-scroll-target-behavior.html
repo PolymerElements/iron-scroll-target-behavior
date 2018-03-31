@@ -189,15 +189,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * Scrolls the content to a particular place.
      *
      * @method scroll
-     * @param {number} left The left position
+     * @param {number|ScrollToOptions} leftOrOptions The left position or scroll options
      * @param {number} top The top position
      */
-    scroll: function(left, top) {
-       if (this.scrollTarget === this._doc) {
-        window.scrollTo(left, top);
+    scroll: function(leftOrOptions, top) {
+      var opts = leftOrOptions;
+      if (typeof leftOrOptions !== 'object') {
+        opts = { x: leftOrOptions, y: top };
+      }
+
+      if (this.scrollTarget === this._doc) {
+        window.scrollTo(opts.x, opts.y);
       } else if (this._isValidScrollTarget()) {
-        this.scrollTarget.scrollLeft = left;
-        this.scrollTarget.scrollTop = top;
+        this.scrollTarget.scrollLeft = opts.x;
+        this.scrollTarget.scrollTop = opts.y;
       }
     },
 
