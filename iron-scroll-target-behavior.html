@@ -189,8 +189,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * Scrolls the content to a particular place.
      *
      * @method scroll
-     * @param {number|ScrollToOptions} leftOrOptions The left position or scroll options
-     * @param {number} top The top position
+     * @param {number|!ScrollToOptions} leftOrOptions The left position or scroll options
+     * @param {number=} top The top position
+     * @return {void}
      */
     scroll: function(leftOrOptions, top) {
       var opts = leftOrOptions;
