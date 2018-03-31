@@ -194,16 +194,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * @return {void}
      */
     scroll: function(leftOrOptions, top) {
-      var opts = leftOrOptions;
-      if (typeof leftOrOptions !== 'object') {
-        opts = { x: leftOrOptions, y: top };
+      var left = leftOrOptions;
+
+      if (typeof leftOrOptions === 'object') {
+        left = leftOrOptions.x;
+        top = leftOrOptions.y;
       }
 
       if (this.scrollTarget === this._doc) {
-        window.scrollTo(opts.x, opts.y);
+        window.scrollTo(left, top);
       } else if (this._isValidScrollTarget()) {
-        this.scrollTarget.scrollLeft = opts.x;
-        this.scrollTarget.scrollTop = opts.y;
+        this.scrollTarget.scrollLeft = left;
+        this.scrollTarget.scrollTop = top;
       }
     },
 
