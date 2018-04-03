@@ -101,10 +101,10 @@ declare namespace Polymer {
     /**
      * Scrolls the content to a particular place.
      *
-     * @param left The left position
+     * @param leftOrOptions The left position or scroll options
      * @param top The top position
      */
-    scroll(left: number, top: number): void;
+    scroll(leftOrOptions: number|ScrollToOptions, top?: number): void;
 
     /**
      * Returns true if the scroll target is a valid HTMLElement.
