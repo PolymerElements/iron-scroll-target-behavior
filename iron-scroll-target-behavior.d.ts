@@ -13,8 +13,8 @@
 declare namespace Polymer {
 
   /**
-   * `Polymer.IronScrollTargetBehavior` allows an element to respond to scroll events from a
-   * designated scroll target.
+   * `Polymer.IronScrollTargetBehavior` allows an element to respond to scroll
+   * events from a designated scroll target.
    *
    * Elements that consume this behavior can override the `_scrollHandler`
    * method to add logic on the scroll event.
@@ -23,8 +23,8 @@ declare namespace Polymer {
 
     /**
      * Specifies the element that will handle the scroll event
-     * on the behalf of the current element. This is typically a reference to an element,
-     * but there are a few more posibilities:
+     * on the behalf of the current element. This is typically a reference to an
+     * element, but there are a few more posibilities:
      *
      * ### Elements id
      *
@@ -73,12 +73,14 @@ declare namespace Polymer {
     readonly _doc: any;
 
     /**
-     * Gets the number of pixels that the content of an element is scrolled upward.
+     * Gets the number of pixels that the content of an element is scrolled
+     * upward.
      */
     _scrollTop: any;
 
     /**
-     * Gets the number of pixels that the content of an element is scrolled to the left.
+     * Gets the number of pixels that the content of an element is scrolled to the
+     * left.
      */
     _scrollLeft: any;
 
@@ -94,7 +96,8 @@ declare namespace Polymer {
     _scrollTargetChanged(scrollTarget: any, isAttached: any): void;
 
     /**
-     * Runs on every scroll event. Consumer of this behavior may override this method.
+     * Runs on every scroll event. Consumer of this behavior may override this
+     * method.
      */
     _scrollHandler(): void;
 
