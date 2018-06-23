@@ -1,4 +1,4 @@
-<!--
+/**
 @license
 Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
 This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
@@ -6,13 +6,14 @@ The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
 The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
+*/
+import '@polymer/polymer/polymer-legacy.js';
 
-<link rel="import" href="../../polymer/polymer.html">
-<link rel="import" href="../iron-scroll-target-behavior.html">
-
-<dom-module id="x-scrollable">
-  <template>
+import { IronScrollTargetBehavior } from '../iron-scroll-target-behavior.js';
+import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
+import { html } from '@polymer/polymer/lib/utils/html-tag.js';
+Polymer({
+  _template: html`
     <style>
       :host {
         display: block;
@@ -29,31 +30,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <template is="dom-repeat" items="[[_getItems(itemCount)]]">
       <div class="item">[[index]]</div>
     </template>
-  </template>
+`,
 
-</dom-module>
+  is: 'x-scrollable',
 
-<script>
-  Polymer({
+  properties: {
 
-    is: 'x-scrollable',
+    itemCount: {type: Number, value: 200}
 
-    properties: {
+  },
 
-      itemCount: {type: Number, value: 200}
+  behaviors: [IronScrollTargetBehavior],
+  _defaultScrollTarget: null,
 
-    },
-
-    behaviors: [Polymer.IronScrollTargetBehavior],
-
-    _defaultScrollTarget: null,
-
-    _getItems: function(itemCount) {
-      var items = new Array(itemCount);
-      while (itemCount > 0) {
-        items[--itemCount] = true;
-      }
-      return items;
+  _getItems: function(itemCount) {
+    var items = new Array(itemCount);
+    while (itemCount > 0) {
+      items[--itemCount] = true;
     }
-  });
-</script>
+    return items;
+  }
+});
