@@ -96,6 +96,8 @@ export const IronScrollTargetBehavior = {
 
       this.scrollTarget = domHost && domHost.$ ?
           domHost.$[scrollTarget] :
+          domHost.shadowRoot ?
+          domHost.shadowRoot.querySelector('#' + scrollTarget) :
           dom(this.ownerDocument).querySelector('#' + scrollTarget);
 
     } else if (this._isValidScrollTarget()) {
